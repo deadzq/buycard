@@ -1,0 +1,42 @@
+##application.yml格式是对properties的简化
+
+##配置jsp解析
+spring:
+  mvc:
+    view:
+      prefix: /butler/
+      suffix: .jsp
+
+
+##MySQL连接
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    username: root
+#    password: zhangqi1112
+#    url: jdbc:mysql://127.0.0.1/orderonwechat?characterEncoding=utf-8&useSSL=false
+#  jpa:
+#    show-sql: true
+#
+#
+#
+##打印日志
+##logging:
+##  #格式化
+##  pattern:
+##    console: "%d 💗 - %msg%n"
+##    #设置日志级别 下面举例从高级别到低级别
+###    ERROR(40, "ERROR"),
+###    WARN(30, "WARN"),
+###    INFO(20, "INFO"),
+###    DEBUG(10, "DEBUG"),
+###    TRACE(0, "TRACE");
+##    level: debug
+##  #设置日志输出路径,默认为spring.log
+##  #path: E:\
+##  #设置文件名称
+##  file: E:\orderOnWeChat.log
+##
+##  #设置日志级别到某个类
+##  #level:
+##    #com.ykmimi.newindex.LoggerTest: debug

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ykmimi.newindex.mapper.MemberCardMapper">
+  <resultMap id="BaseResultMap" type="com.ykmimi.newindex.bean.MemberCard">
+    <id column="MCARD_ID" jdbcType="BIGINT" property="mcardId" />
+    <result column="MCARD_NUMBER" jdbcType="BIGINT" property="mcardNumber" />
+    <result column="MCARD_TYPEID" jdbcType="INTEGER" property="mcardTypeid" />
+    <result column="MEMBER_ID" jdbcType="BIGINT" property="memberId" />
+    <result column="MCARD_STATE" jdbcType="INTEGER" property="mcardState" />
+    <result column="MCARD_BALANCE" jdbcType="DOUBLE" property="mcardBalance" />
+    <result column="MCARD_VD" jdbcType="BIGINT" property="mcardVd" />
+    <result column="MCARD_USECOUNT" jdbcType="INTEGER" property="mcardUsecount" />
+    <result column="REG_DATE" jdbcType="TIMESTAMP" property="regDate" />
+    <result column="MCARD_CANCEL_DATE" jdbcType="TIMESTAMP" property="mcardCancelDate" />
+    <result column="MCARD_PIC" jdbcType="VARCHAR" property="mcardPic" />
+    <result column="EXPAND_01" jdbcType="BIT" property="expand01" />
+    <result column="EXPAND_02" jdbcType="BIT" property="expand02" />
+    <result column="EXPAND_03" jdbcType="BIT" property="expand03" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    MCARD_ID, MCARD_NUMBER, MCARD_TYPEID, MEMBER_ID, MCARD_STATE, MCARD_BALANCE, MCARD_VD, 
+    MCARD_USECOUNT, REG_DATE, MCARD_CANCEL_DATE, EXPAND_01, EXPAND_02, EXPAND_03
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from membercard
+    where MCARD_ID = #{mcardId,jdbcType=BIGINT}
+  </select>
+
+  <!--根据给定卡种ID返回该卡种的List集合-->
+  <select id="showCardList" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from membercard
+    where MCARD_TYPEID = #{cardType}
+  </select>
+
+  <!--动态获取会员卡-->
+  <select id="selectMemberCardSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from membercard
+    <where>
+      <if test="mcardId != null and mcardId !='' ">
+        and MCARD_ID = #{mcardId}
+      </if>
+      <if test="mcardNumber != null and mcardNumber !='' ">
+        and MCARD_NUMBER = #{mcardNumber}
+      </if>
+      <if test="mcardTypeid != null and mcardTypeid !='' ">
+        and MCARD_TYPEID = #{mcardTypeid}
+      </if>
+      <if test="memberId != null and memberId != '' ">
+        and MEMBER_ID = #{memberId}
+      </if>
+      <if test="mcardState != null and mcardState !='' ">
+        and MCARD_STATE = #{mcardState}
+      </if>
+      <if test="mcardBalance != null and mcardBalance !='' ">
+        and MCARD_BALANCE = #{mcardBalance}
+      </if>
+      <if test="mcardVd != null and mcardVd !='' ">
+        and MCARD_VD = #{mcardVd}
+      </if>
+      <if test="mcardUsecount != null and mcardUsecount !='' ">
+        and MCARD_USECOUNT = #{mcardUsecount}
+      </if>
+      <if test="regDate != null and regDate !='' ">
+        and REG_DATE = #{regDate}
+      </if>
+      <if test="mcardCancelDate != null and mcardCancelDate !='' ">
+        and MCARD_CANCEL_DATE = #{mcardCancelDate}
+      </if>
+      <if test="mcardPic != null and mcardPic !='' ">
+        and MCARD_PIC = #{mcardPic}
+      </if>
+      <if test="expand01 != null and expand01 !='' ">
+        and EXPAND_01 = #{expand01}
+      </if>
+      <if test="expand02 != null and expand02 !='' ">
+        and EXPAND_02 = #{expand02}
+      </if>
+      <if test="expand03 != null and expand03 !='' ">
+        and EXPAND_03 = #{expand03}
+      </if>
+    </where>
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from membercard
+    where MCARD_ID = #{mcardId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ykmimi.newindex.bean.MemberCard">
+    insert into membercard (MCARD_ID, MCARD_NUMBER, MCARD_TYPEID, 
+      MEMBER_ID, MCARD_STATE, MCARD_BALANCE, 
+      MCARD_VD, MCARD_USECOUNT, REG_DATE, 
+      MCARD_CANCEL_DATE, EXPAND_01, EXPAND_02, 
+      EXPAND_03)
+    values (#{mcardId,jdbcType=BIGINT}, #{mcardNumber,jdbcType=BIGINT}, #{mcardTypeid,jdbcType=INTEGER}, 
+      #{memberId,jdbcType=BIGINT}, #{mcardState,jdbcType=INTEGER}, #{mcardBalance,jdbcType=DOUBLE}, 
+      #{mcardVd,jdbcType=BIGINT}, #{mcardUsecount,jdbcType=INTEGER}, #{regDate,jdbcType=TIMESTAMP}, 
+      #{mcardCancelDate,jdbcType=TIMESTAMP}, #{expand01,jdbcType=BIT}, #{expand02,jdbcType=BIT}, 
+      #{expand03,jdbcType=BIT})
+  </insert>
+
+  <!--动态插入-->
+  <insert id="insertSelective" parameterType="com.ykmimi.newindex.bean.MemberCard">
+    insert into membercard
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mcardId != null and mcardId !='' ">
+        MCARD_ID,
+      </if>
+      <if test="mcardNumber != null and mcardNumber !='' ">
+        MCARD_NUMBER,
+      </if>
+      <if test="mcardTypeid != null and mcardTypeid !='' ">
+        MCARD_TYPEID,
+      </if>
+      <if test="memberId != null and memberId != '' ">
+        MEMBER_ID,
+      </if>
+      <if test="mcardState != null and mcardState !='' ">
+        MCARD_STATE,
+      </if>
+      <if test="mcardBalance != null and mcardBalance !='' ">
+        MCARD_BALANCE,
+      </if>
+      <if test="mcardVd != null and mcardVd !='' ">
+        MCARD_VD,
+      </if>
+      <if test="mcardUsecount != null and mcardUsecount !='' ">
+        MCARD_USECOUNT,
+      </if>
+      <if test="regDate != null and regDate !='' ">
+        REG_DATE,
+      </if>
+      <if test="mcardCancelDate != null and mcardCancelDate !='' ">
+        MCARD_CANCEL_DATE,
+      </if>
+      <if test="mcardPic != null and mcardPic !='' ">
+        MCARD_PIC,
+      </if>
+      <if test="expand01 != null and expand01 !='' ">
+        EXPAND_01,
+      </if>
+      <if test="expand02 != null and expand02 !='' ">
+        EXPAND_02,
+      </if>
+      <if test="expand03 != null and expand03 !='' ">
+        EXPAND_03,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mcardId != null and mcardId !='' ">
+        #{mcardId},
+      </if>
+      <if test="mcardNumber != null and mcardNumber !='' ">
+        #{mcardNumber},
+      </if>
+      <if test="mcardTypeid != null and mcardTypeid !='' ">
+        #{mcardTypeid},
+      </if>
+      <if test="memberId != null and memberId != '' ">
+        #{memberId},
+      </if>
+      <if test="mcardState != null and mcardState !='' ">
+        #{mcardState},
+      </if>
+      <if test="mcardBalance != null and mcardBalance !='' ">
+        #{mcardBalance},
+      </if>
+      <if test="mcardVd != null and mcardVd !='' ">
+        #{mcardVd},
+      </if>
+      <if test="mcardUsecount != null and mcardUsecount !='' ">
+        #{mcardUsecount},
+      </if>
+      <if test="regDate != null and regDate !='' ">
+        #{regDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mcardCancelDate != null and mcardCancelDate !='' ">
+        #{mcardCancelDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mcardPic != null and mcardPic !='' ">
+        #{mcardPic},
+      </if>
+      <if test="expand01 != null and expand01 !='' ">
+        #{expand01},
+      </if>
+      <if test="expand02 != null and expand02 !='' ">
+        #{expand02},
+      </if>
+      <if test="expand03 != null and expand03 !='' ">
+        #{expand03},
+      </if>
+    </trim>
+  </insert>
+
+  <!--动态更新会员卡-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.ykmimi.newindex.bean.MemberCard">
+    update membercard
+    <set>
+      <if test="mcardNumber != null and mcardNumber != '' ">
+        MCARD_NUMBER = #{mcardNumber,jdbcType=BIGINT},
+      </if>
+      <if test="mcardTypeid != null and mcardTypeid != '' ">
+        MCARD_TYPEID = #{mcardTypeid,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null and memberId != '' ">
+        MEMBER_ID = #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="mcardState != null and mcardState != '' ">
+        MCARD_STATE = #{mcardState,jdbcType=INTEGER},
+      </if>
+      <if test="mcardBalance != null and mcardBalance != '' ">
+        MCARD_BALANCE = #{mcardBalance,jdbcType=DOUBLE},
+      </if>
+      <if test="mcardVd != null and mcardVd != '' ">
+        MCARD_VD = #{mcardVd,jdbcType=BIGINT},
+      </if>
+      <if test="mcardUsecount != null and mcardUsecount != '' ">
+        MCARD_USECOUNT = #{mcardUsecount,jdbcType=INTEGER},
+      </if>
+      <if test="regDate != null and regDate != '' ">
+        REG_DATE = #{regDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mcardCancelDate != null and mcardCancelDate != '' ">
+        MCARD_CANCEL_DATE = #{mcardCancelDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expand01 != null and expand01 != '' ">
+        EXPAND_01 = #{expand01,jdbcType=BIT},
+      </if>
+      <if test="expand02 != null and expand02 != '' ">
+        EXPAND_02 = #{expand02,jdbcType=BIT},
+      </if>
+      <if test="expand03 != null and expand03 != '' ">
+        EXPAND_03 = #{expand03,jdbcType=BIT},
+      </if>
+    </set>
+    where MCARD_ID = #{mcardId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ykmimi.newindex.bean.MemberCard">
+    update membercard
+    set MCARD_NUMBER = #{mcardNumber,jdbcType=BIGINT},
+      MCARD_TYPEID = #{mcardTypeid,jdbcType=INTEGER},
+      MEMBER_ID = #{memberId,jdbcType=BIGINT},
+      MCARD_STATE = #{mcardState,jdbcType=INTEGER},
+      MCARD_BALANCE = #{mcardBalance,jdbcType=DOUBLE},
+      MCARD_VD = #{mcardVd,jdbcType=BIGINT},
+      MCARD_USECOUNT = #{mcardUsecount,jdbcType=INTEGER},
+      REG_DATE = #{regDate,jdbcType=TIMESTAMP},
+      MCARD_CANCEL_DATE = #{mcardCancelDate,jdbcType=TIMESTAMP},
+      EXPAND_01 = #{expand01,jdbcType=BIT},
+      EXPAND_02 = #{expand02,jdbcType=BIT},
+      EXPAND_03 = #{expand03,jdbcType=BIT}
+    where MCARD_ID = #{mcardId,jdbcType=BIGINT}
+  </update>
+
+</mapper>

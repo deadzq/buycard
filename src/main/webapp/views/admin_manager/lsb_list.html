@@ -1,0 +1,196 @@
+﻿<%@ page language="java" import="java.util.*" pageEncoding="ISO-8859-1"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>服务统计</title>
+    <link href="css/themes/default/easyui.css" rel="stylesheet" />
+    <link href="css/themes/icon.css" rel="stylesheet" />
+    <link href="css/themes/color.css" rel="stylesheet" />
+    <link href="css/xwb_list.css" rel="stylesheet" />
+    <script src="script/jquery.min.js"></script>
+    <script src="script/jquery.easyui.min.js"></script>
+    <script src="script/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+
+
+    <div>
+    	<form id="searchform" method="post">
+        <table id="sec"> 
+            <tr>
+                <td>姓名：</td>
+                <td><input type="text" name="lsmz"  class="easyui-textbox" id="DisplayName"/></td>
+                <td>年级</td>
+                <td>
+                	<input type="text" name="lsnj"  class="easyui-textbox" id="DisplayName"/></td>
+                 
+                  <td>  
+                    <a href="javascript:void(0)" id="submit_search" class="easyui-linkbutton c1" style="width:70px">查询</a>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+     <table id="dg" title="老师展示表格">
+		 
+	</table>
+	<div id="toolbar">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newLS()">新建老师</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editLS()">修改老师</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeLS()">删除老师</a>
+	</div>
+	
+	<div id="dlg" class="easyui-dialog" style="width:800px;height:280px;padding:10px 20px"
+			closed="true" buttons="#dlg-buttons">
+		<div class="ftitle">老师信息管理</div>
+		<form id="fm" method="post"  enctype="multipart/form-data" novalidate>
+			<div class="fitem" >
+				<label>老师名字:</label>
+				<input name="lsmz"  class="easyui-validatebox" required="required" >
+			</div>
+			 
+			<div class="fitem">
+				<label>老师年级:</label>
+				<input name="lsnj" class="easyui-validatebox" required="required">
+			</div>
+			<div class="fitem">
+				<label>老师学科:</label>
+				<input name="lsxk" class="easyui-validatebox"/>
+			</div>
+			<div class="fitem">
+				<label>老师简介:</label>
+				<input name="lsjj"  class="easyui-validatebox"/>
+			</div>
+			<div class="fitem" style="display: none">
+				<label>老师图片:</label>
+				<input name="lstp" type="text">
+			</div>
+			<div class="fitem">
+				<label>老师图片:</label>
+				<input name="lstp1" type="file">
+			</div>
+			
+			<div class="fitem">
+				<label>老师风采:</label>
+				<input name="lsfc" class="easyui-validatebox">
+			</div>
+			
+			
+			
+			 
+			
+		</form>
+	</div>
+	<div id="dlg-buttons">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveLS()">保存</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">Cancel</a>
+	</div>
+	
+	<script>
+	
+	$('#dg').datagrid({
+	    url:'/jiaoyu2/lsb/getList.do',
+	    toolbar:'#toolbar',
+		pagination:'true',
+		rownumbers:'true',
+		fitColumns:'true', 
+		singleSelect:'true',
+		queryParams:  form2Json('searchform'),
+			
+	    columns:[[
+			{field:'lsid',title:'id', hidden: true},
+			{field:'lsmz',title:'老师名字',width:100},
+			{field:'lsnj',title:'老师年级',width:100 },
+			{field:'lsxk',title:'老师学科',width:100 }, 
+			{field:'lsjj',title:'老师简介',width:100 }, 
+			{field:'lsfc',title:'老师风采',width:100},
+			{field:'lstp',title:'老师图片',align:'left',
+				formatter:function(value, rec){//使用formatter格式化刷子
+				return '<img style="width:100px;height:50px" src=/jiaoyu2/'+value+' ></img>';
+			}} 
+			
+	    ]]
+	});
+	  function form2Json(id) {
+		  
+          var arr = $("#" + id).serializeArray();
+          var jsonStr = "";
+
+          jsonStr += '{';
+          for (var i = 0; i < arr.length; i++) {
+              jsonStr += '"' + arr[i].name + '":"' + arr[i].value + '",';
+          }
+          jsonStr = jsonStr.substring(0, (jsonStr.length - 1));
+          jsonStr += '}';
+
+          var json = JSON.parse(jsonStr);
+          return json;
+      }
+	</script>
+	
+	<script type="text/javascript">
+		var url;
+		function newLS(){
+			//打开新增班级窗口并设置标题
+			$('#dlg').dialog('open').dialog('setTitle','添加老师');
+			//班级表单清空
+			$('#fm').form('clear');
+			url = '/jiaoyu2/lsb/addls.do';
+		}
+		function editLS(){
+			//获取表格中换种的行,若没有返回null
+			var row = $('#dg').datagrid('getSelected');
+			if (row){  
+				$('#dlg').dialog('open').dialog('setTitle','老师信息修改');
+				$('#fm').form('load',row);
+				 
+				url = '/jiaoyu2/lsb/update.do?lsid='+row.lsid;
+			}
+		}
+		function saveLS(){
+			$('#fm').form('submit',{
+				url: url,
+				onSubmit: function(){//在提交前触发,验证表单数据
+					return $(this).form('validate');
+				},
+				success: function(result){//执行保存成功后执行的回调函数
+					 
+					if (result>0){
+						$.messager.alert('操作结果','成功');
+						$('#dlg').dialog('close');		// 关闭新增班级窗口
+						$('#dg').datagrid('reload');	// reload the user data
+					} else { 
+						$.messager.alert('操作结果','失败');
+					}
+				}
+			});
+		}
+		function removeLS(){
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				$.messager.confirm('确认按钮','你确定要删除该老师么?',function(r){
+					if (r){
+						$.post('/jiaoyu2/lsb/del.do',{lsid:row.lsid},function(result){
+							if (result>0){
+								$.messager.alert('删除结果','成功');
+								$('#dg').datagrid('reload');	 
+							} else {
+								$.messager.alert('删除结果','失败');
+							}
+						},'json');
+					}
+				});
+			}
+		}
+		 $("#submit_search").click(function () {
+             $('#dg').datagrid({queryParams: form2Json("searchform")});   //点击搜索
+         });
+	</script>
+</body>
+</html>

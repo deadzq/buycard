@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>服务统计</title>
+    <link href="css/themes/default/easyui.css" rel="stylesheet" />
+    <link href="css/themes/icon.css" rel="stylesheet" />
+    <link href="css/themes/color.css" rel="stylesheet" />
+    <link href="css/xwb_list.css" rel="stylesheet" />
+    <script src="script/jquery.min.js"></script>
+    <script src="script/jquery.easyui.min.js"></script>
+    <script src="script/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <div>
+    	<!-- 条件查询 -->
+    	<form id="searchform" method="post">
+	        <table id="sec"> 
+	            <tr>
+	                <td>课程名称：</td>
+	                <td><input type="text" name="zxmz"  class="easyui-textbox" id="DisplayName"/></td>
+	                <td>价格：</td>
+	                <td>
+	                	<input type="text" name="zxjg"  class="easyui-textbox" id="DisplayName"/></td>
+	                 
+	                  <td>  
+	                    <a href="javascript:void(0)" id="submit_search" class="easyui-linkbutton c1" style="width:70px">查询</a>
+	                </td>
+	            </tr>
+	        </table>
+        </form>
+    </div>
+    <!-- ================================  -->
+    <!-- 表格加载数据 -->
+     <table id="dg" title="课程展示表格">
+		 
+	</table>
+	<!-- 表格 上的 按钮 -->
+	<div id="toolbar">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newLS()">新建</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editLS()">修改</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeLS()">删除</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchZX()" >查看相关视频</a>
+	</div>
+	<!-- ================================================= -->
+	
+	<!-- 弹窗  -->
+	<div id="dlg" class="easyui-dialog" style="width:800px;height:280px;padding:10px 20px"
+			closed="true" buttons="#dlg-buttons">
+		<div class="ftitle">老师信息管理</div>
+		<form id="fm" method="post"  enctype="multipart/form-data" novalidate>
+			<!-- 主要为了修改的时候 把id传给 control -->
+			<div class="fitem" hidden="hidden" >
+				<label>id:</label>
+				<!--required="required"此input变成必填项  -->
+				<input name="zxid"  class="easyui-validatebox"  >
+			</div>
+			<div class="fitem" >
+				<label>老师名字:</label>
+				<!-- easyui 提供的方法 -->
+				<select class="easyui-combobox" style="width: 126px;" name="lsid"
+                          data-options="
+                          panelHeight:'auto',
+                          valueField:'lsid',
+                          textField:'lsmz',
+                          url:'/jiaoyu2/lsb/getList.do'" style="width: 126px; height:40px" >
+				</select>
+				
+			</div>
+			<div class="fitem" >
+				<label>课程名:</label>
+				<input name="zxmz"  class="easyui-validatebox" required="required" >
+			</div>
+			 
+			<div class="fitem">
+				<label>时长:</label>
+				<input name="zxsc" class="easyui-validatebox" required="required">
+			</div>
+			<div class="fitem">
+				<label>老师图片:</label>
+				<input name="zxtp1" type="file">
+			</div>
+			<div class="fitem" hidden="hidden">
+				<label>老师图片:</label>
+				<input name="zxtp"  class="easyui-validatebox">
+			</div>
+			
+			<div class="fitem">
+				<label>价格:</label>
+				<input name="zxjg"  class="easyui-validatebox"/>
+			</div>
+			<div class="fitem" >
+				<label>简介:</label>
+				<input name="zxjj" type="text">
+			</div>
+			
+		</form>
+	</div>
+	
+	<div id="dlg-buttons">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveLS()">保存</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">Cancel</a>
+	</div>
+	<!-- ================================================================================ -->
+	<!-- 视频弹窗 -->
+	<div id="dlgsp" class="easyui-dialog" style="width:800px;height:280px;padding:10px 20px"
+			closed="true">
+		
+		 <!-- 表格加载数据 -->
+	     <table id="dgsp" title="相关视频展示表格">
+			 
+		</table>
+		<!-- 表格 上的 按钮 -->
+		<div id="toolbarsp">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="">新建</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="">修改</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="">删除</a>
+		</div>
+			
+		
+	</div>
+	<script>
+	/* 表格加载数据 */
+	$('#dg').datagrid({
+	    url:'/jiaoyu2/zxb/getListLianHe.do',
+	    toolbar:'#toolbar',/* 将id为toolbar的标签绑定到 dg表格上 */
+		pagination:'true',/* 是否显示分页查询 */
+		rownumbers:'true',/* 行号  */
+		fitColumns:'true', /*单元格自动调整  */
+		singleSelect:'true',/*只能选择一条记录 */
+		queryParams:  form2Json('searchform'),/* 把条件选择框中的 内容 传给 control */
+		/* 
+			mapper 执行的是select查询命令方法名 queryXXX  query查询  params
+			查询参数   调用control的时候传递的参数  
+		 */
+	    columns:[[
+			{field:'zxid',title:'id', hidden: true},
+			{field:'lsid',title:'lsid', hidden: true},
+			{field:'lsmz',title:'老师', width:100},
+			{field:'zxmz',title:'课程名',width:100},
+			{field:'zxsc',title:'时长',width:100 },
+			{field:'zxjg',title:'价格',width:100 }, 
+			{field:'zxjj',title:'简介',width:100 }, 
+			{field:'zxtp',title:'图片',align:'left',
+				formatter:function(value, rec){//使用formatter格式化刷子
+				return '<img style="width:100px;height:50px" src='+value+' ></img>';
+			}} 
+			
+	    ]]
+	});
+	  function form2Json(id) {
+		  
+          var arr = $("#" + id).serializeArray();
+          var jsonStr = "";
+
+          jsonStr += '{';
+          for (var i = 0; i < arr.length; i++) {
+              jsonStr += '"' + arr[i].name + '":"' + arr[i].value + '",';
+          }
+          jsonStr = jsonStr.substring(0, (jsonStr.length - 1));
+          jsonStr += '}';
+
+          var json = JSON.parse(jsonStr);
+          return json;
+      }
+	</script>
+	
+	<script type="text/javascript">
+		var url;
+		function newLS(){
+			//打开窗口，设置 标题为：添加课程
+			$('#dlg').dialog('open').dialog('setTitle','添加课程');
+			//清除form表单的数据
+			$('#fm').form('clear');
+			
+			url = '/jiaoyu2/zxb/addzx.do';
+		}
+		function editLS(){
+			//获得dg表格中选中的行
+			var row = $('#dg').datagrid('getSelected');
+			//row 为空则没有选中 row不为空则认为已选中
+			if (row){  
+			
+				$('#dlg').dialog('open').dialog('setTitle','修改课程');
+				//将你选中的数据  回填到 form表单里、
+				$('#fm').form('load',row);
+				 
+				url = '/jiaoyu2/zxb/update.do';
+			}
+		}
+		function saveLS(){
+			$('#fm').form('submit',{
+				url: url,
+				onSubmit: function(){
+					//在提交表单数据之前，检验 必填项是否为空
+					//如果有为空 $(this).form('validate'); ==false 不会再提交数据
+					//如果没有为空  $(this).form('validate'); ==true 继续提交数据
+					return $(this).form('validate');
+				},
+				success: function(result){//执行保存成功后执行的回调函数
+					 
+					if (result>0){
+						//提醒用户
+						$.messager.alert('操作结果','成功');
+						//弹窗关闭
+						$('#dlg').dialog('close');		
+						//让表格重新加载数据
+						$('#dg').datagrid('reload');	// reload the user data
+					} else { 
+						$.messager.alert('操作结果','失败');
+					}
+				}
+			});
+		}
+		function removeLS(){
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				$.messager.confirm('确认按钮','你确定要删除该老师么?',function(r){
+					if (r){
+						$.post('/jiaoyu2/zxb/del.do',{zxid:row.zxid},function(result){
+							if (result>0){
+								$.messager.alert('删除结果','成功');
+								$('#dg').datagrid('reload');	 
+							} else {
+								$.messager.alert('删除结果','失败');
+							}
+						},'json');
+					}
+				});
+			}
+		}
+		/*查询按钮添加事件  */
+		 $("#submit_search").click(function () {
+		 	/*请求 url的时候 顺便 把 查询表单中的input 用户输入的内容传给Control*/
+             $('#dg').datagrid({url:"" ,queryParams: form2Json("searchform")});   //点击搜索
+         });
+      /*=========================================================================================  */
+      function searchZX(){
+      	//判断是否选中课程
+      	var row = $('#dg').datagrid('getSelected');
+      	if(row){
+      		//弹窗
+      		$('#dlgsp').dialog('open').dialog('setTitle','查看相关视频');
+      		
+      		/* 表格加载数据 */
+			$('#dgsp').datagrid({
+			    url:'/jiaoyu2/spb/getListLianHe.do',
+			    toolbar:'#toolbarsp',/* 将id为toolbar的标签绑定到 dg表格上 */
+				pagination:'true',/* 是否显示分页查询 */
+				rownumbers:'true',/* 行号  */
+				fitColumns:'true', /*单元格自动调整  */
+				singleSelect:'true',/*只能选择一条记录 */
+				queryParams:  {zxid:row.zxid},/* 把条件选择框中的 内容 传给 control */
+				/* 
+					mapper 执行的是select查询命令方法名 queryXXX  query查询  params
+					查询参数   调用control的时候传递的参数  
+				 */
+			    columns:[[
+					{field:'spid',title:'id', hidden: true},
+					{field:'zxid',title:'zxid',width:100,hidden: true},
+					{field:'zxmz',title:'在线名字',width:100},
+					{field:'spbt',title:'视频标题',width:100 },
+					{field:'spsc',title:'视频时长',width:100 }, 
+					{field:'spmf',title:'是否免费',width:100,
+						formatter:function(value){//使用formatter格式化刷子
+							if(value=="true"){
+								return "是";
+							}else if(value=="false"){
+								return "否";
+							}else{
+								return value;
+							};
+						}
+					}, 
+					{field:'spurl',title:'视频url',width:100}
+			    ]]
+			});
+      	}
+      
+      }
+	</script>
+</body>
+</html>

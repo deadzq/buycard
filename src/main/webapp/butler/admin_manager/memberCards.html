@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>会员</title>
+    <link href="css/themes/default/easyui.css" type="text/css" rel="stylesheet" />
+    <link href="css/themes/icon.css" rel="stylesheet" />
+    <link href="css/xwb_list.css" rel="stylesheet" />
+	<link href="css/themes/color.css" rel="stylesheet" />
+    <link href="css/wm.css" rel="stylesheet" />
+    <script src="script/jquery.min.js"></script>
+    <script src="script/jquery.easyui.min.js"></script>
+    <script src="script/easyui-lang-zh_CN.js"></script>
+  
+</head>
+<body>
+
+	<!-- 条件查询 -->
+    <div>
+    	<form id="searchform" method="post">
+        <table id="sec"> 
+            <tr>
+                <td>卡号：</td>
+                <td><input type="text" name="admin_name"  class="easyui-textbox"  value="" /></td>
+                <td>卡号状态:</td>
+                <td>
+                	<input type="text" name="admin_password"  class="easyui-textbox"  value="" /></td>
+                 
+                  <td>  
+                    <a href="javascript:void(0)" id="submit_search" class="easyui-linkbutton c1" style="width:70px">查询</a>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+     <table id="dg" title="新闻展示表格"  >
+		 
+	 </table>
+	<div id="toolbar">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">插入会员卡</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改会员卡信息</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeUser()">删除会员卡</a>
+	</div>
+	<!-- 添加新闻 -->
+	<div id="dlg" class="easyui-dialog" style="width:800px;height:280px;padding:10px 20px"
+			closed="true" buttons="#dlg-buttons">
+		<div class="ftitle">会员卡信息管理</div>
+		
+		<form id="fm" method="post"   novalidate>
+		<div class="fitem" hidden="hidden">
+				<label>会员卡序列号:</label>
+				<input name="mcardId"  class="easyui-validatebox" >
+			</div>
+			 
+			<div class="fitem" >
+				<label>会员卡卡号:</label>
+				<input name="mcardNumber"  class="easyui-validatebox" required="true">
+			</div>
+			 
+			<div class="fitem">
+				<label>会员卡分类Id:</label>
+				<input name="mcardTypeid" class="easyui-validatebox" required="true">
+			</div>
+			
+			<div class="fitem">
+				<label>会员Id:</label>
+				<input name="memberId" class="easyui-validatebox" >
+			</div>
+
+			<div class="fitem">
+				<label>会员卡状态:</label>
+				<input name="mcardState" class="easyui-validatebox" required="true">
+			</div>
+
+			<div class="fitem">
+				<label>会员卡余额:</label>
+				<input name="mcardBalance" class="easyui-validatebox" >
+			</div>
+
+			<div class="fitem">
+				<label>会员卡有效期:</label>
+				<input name="mcardVd" class="easyui-validatebox" >
+			</div>			
+
+			<div class="fitem">
+				<label>会员卡次数:</label>
+				<input name="mcardUsecount" class="easyui-validatebox" >
+			</div>
+
+			<!--<div class="fitem">-->
+				<!--<label>生成时间:</label>-->
+				<!--<input name="regDate" class="easyui-validatebox" >-->
+			<!--</div>-->
+
+			<!--<div class="fitem">-->
+				<!--<label>注销时间:</label>-->
+				<!--<input name="mcardCancelDate" class="easyui-validatebox" >-->
+			<!--</div>-->
+
+			<div class="fitem">
+				<label>会员卡图片路径:</label>
+				<input name="mcardPic" class="easyui-validatebox" >
+			</div>
+
+
+			<!--<div class="fitem">-->
+				<!--<label>作者:</label>-->
+				<!--<input name="xwzz" class="easyui-validatebox">-->
+			<!--</div>-->
+			<!--<div class="fitem">-->
+				<!--<label>类别:</label>-->
+				<!--<input name="xwlb" class="easyui-validatebox">-->
+			<!--</div>-->
+			
+			
+		</form>
+	</div>
+	<div id="dlg-buttons">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">Cancel</a>
+	</div>
+	
+	<script>
+	
+	$('#dg').datagrid({
+	    url:'/selectMemberCardSelective',
+	    toolbar:'#toolbar',
+		pagination:'true',
+		rownumbers:'true',
+		fitColumns:'true', 
+		singleSelect:'true',
+		queryParams:  form2Json('searchform'),
+		 
+	    columns:[[
+			{field:'mcardId',title:'会员卡序列号', width:100},
+			{field:'mcardNumber',title:'会员卡卡号',width:100},
+			{field:'mcardTypeid',title:'会员卡分类Id',width:100,
+				formatter:function(value,row,index){
+			    	// console.log(row.mcardTypeid);
+					if(value==1){
+					    return '首享卡';
+					}else if(value==2){
+					    return '私享卡';
+					}else if(value==3){
+					    return '至尊卡';
+					}
+			    	console.log(value);
+				}},
+			{field:'memberId',title:'会员Id',width:100},
+			{field:'mcardState',title:'会员卡状态',width:100},
+			{field:'mcardBalance',title:'会员卡余额',width:100},
+			{field:'mcardVd',title:'会员卡有效期',width:100},
+			{field:'mcardUsecount',title:'会员卡次数',width:100},
+			{field:'regDate',title:'生成时间',width:100},
+			{field:'mcardCancelDate',title:'注销时间',width:100},
+			{field:'mcardPic',title:'会员卡图片路径',width:100}
+
+	    ]]
+	});
+	  function form2Json(id) {
+		  
+          var arr = $("#" + id).serializeArray()
+          var jsonStr = "";
+
+          jsonStr += '{';
+          for (var i = 0; i < arr.length; i++) {
+              jsonStr += '"' + arr[i].name + '":"' + arr[i].value + '",'
+          }
+          jsonStr = jsonStr.substring(0, (jsonStr.length - 1));
+          jsonStr += '}'
+
+          var json = JSON.parse(jsonStr)
+          return json
+      }
+	</script>
+	
+	<script type="text/javascript">
+		var url;
+		function newUser(){
+			//打开添加新闻 窗口
+			$('#dlg').dialog('open').dialog('setTitle','插入会员卡');
+			//把form表单的内容给清空
+			$('#fm').form('clear');
+			//给url赋值
+			url = '/insertSelective';
+		}
+		function editUser(){
+			//获得 选中的行 
+			var row = $('#dg').datagrid('getSelected');
+			// 是否选中
+			if (row){
+				//打开窗口 
+				$('#dlg').dialog('open').dialog('setTitle','用户信息修改');
+				//让from 表单去加载 选中行的数据
+				$('#fm').form('load',row);
+				//修改的地址
+				url = '/updateSelective';
+			}
+		}
+		function saveUser(){
+			$('#fm').form('submit',{
+				url: url,
+				onSubmit: function(){
+					return $(this).form('validate');
+				},
+				success: function(result){
+					 
+					if (result>0){
+						$.messager.alert('操作结果','成功');
+						//关闭添加新闻窗口
+						$('#dlg').dialog('close');		// close the dialog
+						//重新加载数据
+						$('#dg').datagrid('reload');	// reload the user data
+					} else { 
+						$.messager.alert('操作结果','失败');
+					}
+				}
+			});
+		}
+		function removeUser(){
+			//获得选中记录
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				$.messager.confirm('确认按钮','你确定要删除该数据?',function(r){
+					if (r){
+						/* $.post('url路径',数据,回调方法,格式);
+							row.xwsj 
+						 */
+						$.post('/deleteByPrimaryKey',{mcardId:row.mcardId},function(result){
+							if (result>0){
+								$.messager.alert('删除结果','成功');
+								$('#dg').datagrid('reload');	 
+							} else {
+								$.messager.alert('删除结果','失败');
+							}
+						},'json');
+					}
+				});
+			}
+		}
+		 $("#submit_search").click(function () {
+             $('#dg').datagrid({url:"/selectMemberCardSelective", queryParams: form2Json("searchform") });   //点击搜索
+         });
+	</script>
+</body>
+</html>

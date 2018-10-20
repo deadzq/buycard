@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ykmimi.newindex.mapper.MemberMapper">
+  <resultMap id="BaseResultMap" type="Member">
+    <id column="MEMBER_ID" jdbcType="BIGINT" property="memberId" />
+    <result column="MEMBER_NAME" jdbcType="VARCHAR" property="memberName" />
+    <result column="MEMBER_PHONE" jdbcType="BIGINT" property="memberPhone" />
+    <result column="MEMBER_SEXUAL" jdbcType="INTEGER" property="memberSexual" />
+    <result column="MEMBER_ADDR" jdbcType="VARCHAR" property="memberAddr" />
+    <result column="MEMBER_IDENTITY" jdbcType="BIGINT" property="memberIdentity" />
+    <result column="MEMBER_CARNUMBER" jdbcType="VARCHAR" property="memberCarnumber" />
+    <result column="MEMBER_LOGINNAME" jdbcType="VARCHAR" property="memberLoginname" />
+    <result column="MEMBER_PASSWORD" jdbcType="VARCHAR" property="memberPassword" />
+    <result column="MEMBER_TYPE" jdbcType="INTEGER" property="memberType" />
+    <result column="MEMBER_CARDID" jdbcType="VARCHAR" property="memberCardid" />
+    <result column="MEMBER_NICKNAME" jdbcType="VARCHAR" property="memberNickname" />
+    <result column="MEMBER_POINTS" jdbcType="BIGINT" property="memberPoints" />
+    <result column="RECEIVE_ADDRID" jdbcType="INTEGER" property="receiveAddrid" />
+    <result column="MEMBER_PIC" jdbcType="VARCHAR" property="memberPic" />
+    <result column="REG_DATE" jdbcType="TIMESTAMP" property="regDate" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="LAST_LOGINDATE" jdbcType="TIMESTAMP" property="lastLogindate" />
+    <result column="LAST_OUTDATE" jdbcType="TIMESTAMP" property="lastOutdate" />
+    <result column="EXPAND_01" jdbcType="BIT" property="expand01" />
+    <result column="EXPAND_02" jdbcType="BIT" property="expand02" />
+    <result column="EXPAND_03" jdbcType="BIT" property="expand03" />
+    <result column="EXPAND_04" jdbcType="BIT" property="expand04" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    MEMBER_ID, MEMBER_NAME, MEMBER_PHONE, MEMBER_SEXUAL, MEMBER_ADDR, MEMBER_IDENTITY, 
+    MEMBER_CARNUMBER, MEMBER_LOGINNAME, MEMBER_PASSWORD, MEMBER_TYPE, MEMBER_CARDID, 
+    MEMBER_NICKNAME, MEMBER_POINTS, RECEIVE_ADDRID, MEMBER_PIC, REG_DATE, UPDATE_DATE, 
+    LAST_LOGINDATE, LAST_OUTDATE, EXPAND_01, EXPAND_02, EXPAND_03, EXPAND_04
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where MEMBER_ID = #{memberId,jdbcType=BIGINT}
+  </select>
+
+  <!--动态查询用户-->
+  <select id="selectMemberSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from member
+    <where>
+      <if test="memberId != null and memberId !='' ">
+        and MEMBER_ID = #{memberId}
+      </if>
+      <if test="memberName != null and memberName !='' ">
+        and MEMBER_NAME = #{memberName}
+      </if>
+      <if test="memberPhone != null and memberPhone !='' ">
+        and MEMBER_PHONE = #{memberPhone}
+      </if>
+      <if test="memberSexual != null and memberSexual != '' ">
+        and MEMBER_SEXUAL = #{memberSexual}
+      </if>
+      <if test="memberAddr != null and memberAddr !='' ">
+        and MEMBER_ADDR = #{memberAddr}
+      </if>
+      <if test="memberIdentity != null and memberIdentity !='' ">
+        and MEMBER_IDENTITY = #{memberIdentity}
+      </if>
+      <if test="memberCarnumber != null and memberCarnumber !='' ">
+        and MEMBER_CARNUMBER = #{memberCarnumber}
+      </if>
+      <if test="memberLoginname != null and memberLoginname !='' ">
+        and MEMBER_LOGINNAME = #{memberLoginname}
+      </if>
+      <if test="memberPassword != null and memberPassword !='' ">
+        and MEMBER_PASSWORD = #{memberPassword}
+      </if>
+      <if test="memberType != null and memberType !='' ">
+        and MEMBER_TYPE = #{memberType}
+      </if>
+      <if test="memberCardid != null and memberCardid !='' ">
+        and MEMBER_CARDID = #{memberCardid}
+      </if>
+      <if test="memberNickname != null and memberNickname !='' ">
+        and MEMBER_NICKNAME = #{memberNickname}
+      </if>
+      <if test="memberPoints != null and memberPoints !='' ">
+        and MEMBER_POINTS = #{memberPoints}
+      </if>
+      <if test="receiveAddrid != null and receiveAddrid !='' ">
+        and RECEIVE_ADDRID = #{receiveAddrid}
+      </if>
+      <if test="memberPic != null and memberPic !='' ">
+        and MEMBER_PIC = #{memberPic}
+      </if>
+      <if test="regDate != null and regDate !='' ">
+        and REG_DATE = #{regDate}
+      </if>
+      <if test="updateDate != null and updateDate !='' ">
+        and UPDATE_DATE = #{updateDate}
+      </if>
+      <if test="lastLogindate != null and lastLogindate !='' ">
+        and LAST_LOGINDATE = #{lastLogindate}
+      </if>
+      <if test="lastOutdate != null and lastOutdate !='' ">
+        and LAST_OUTDATE = #{lastOutdate}
+      </if>
+      <if test="expand01 != null and expand01 !='' ">
+        and EXPAND_01 = #{expand01}
+      </if>
+      <if test="expand02 != null and expand02 !='' ">
+        and EXPAND_02 = #{expand02}
+      </if>
+      <if test="expand03 != null and expand03 !='' ">
+        and EXPAND_03 = #{expand03}
+      </if>
+      <if test="expand04 != null and expand04 !='' ">
+        and EXPAND_04 = #{expand04}
+      </if>
+    </where>
+
+  </select>
+
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from member
+    where MEMBER_ID = #{memberId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="Member">
+    insert into member (MEMBER_ID, MEMBER_NAME, MEMBER_PHONE, 
+      MEMBER_SEXUAL, MEMBER_ADDR, MEMBER_IDENTITY, 
+      MEMBER_CARNUMBER, MEMBER_LOGINNAME, MEMBER_PASSWORD, 
+      MEMBER_TYPE, MEMBER_CARDID, MEMBER_NICKNAME, 
+      MEMBER_POINTS, RECEIVE_ADDRID, MEMBER_PIC, 
+      REG_DATE, UPDATE_DATE, LAST_LOGINDATE, 
+      LAST_OUTDATE, EXPAND_01, EXPAND_02, 
+      EXPAND_03, EXPAND_04)
+    values (#{memberId,jdbcType=BIGINT}, #{memberName,jdbcType=VARCHAR}, #{memberPhone,jdbcType=BIGINT}, 
+      #{memberSexual,jdbcType=INTEGER}, #{memberAddr,jdbcType=VARCHAR}, #{memberIdentity,jdbcType=BIGINT}, 
+      #{memberCarnumber,jdbcType=VARCHAR}, #{memberLoginname,jdbcType=VARCHAR}, #{memberPassword,jdbcType=VARCHAR}, 
+      #{memberType,jdbcType=INTEGER}, #{memberCardid,jdbcType=VARCHAR}, #{memberNickname,jdbcType=VARCHAR}, 
+      #{memberPoints,jdbcType=BIGINT}, #{receiveAddrid,jdbcType=INTEGER}, #{memberPic,jdbcType=VARCHAR}, 
+      #{regDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{lastLogindate,jdbcType=TIMESTAMP}, 
+      #{lastOutdate,jdbcType=TIMESTAMP}, #{expand01,jdbcType=BIT}, #{expand02,jdbcType=BIT}, 
+      #{expand03,jdbcType=BIT}, #{expand04,jdbcType=BIT})
+  </insert>
+
+  <!--根据用户输入字段生成会员实体数据-->
+  <insert id="insertSelective" parameterType="Member">
+    insert into member
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberId != null and memberId !='' ">
+        MEMBER_ID,
+      </if>
+      <if test="memberName != null and memberName !='' ">
+        MEMBER_NAME,
+      </if>
+      <if test="memberPhone != null and memberPhone !='' ">
+        MEMBER_PHONE,
+      </if>
+      <if test="memberSexual != null and memberSexual != '' ">
+        MEMBER_SEXUAL,
+      </if>
+      <if test="memberAddr != null and memberAddr !='' ">
+        MEMBER_ADDR,
+      </if>
+      <if test="memberIdentity != null and memberIdentity !='' ">
+        MEMBER_IDENTITY,
+      </if>
+      <if test="memberCarnumber != null and memberCarnumber !='' ">
+        MEMBER_CARNUMBER,
+      </if>
+      <if test="memberLoginname != null and memberLoginname !='' ">
+        MEMBER_LOGINNAME,
+      </if>
+      <if test="memberPassword != null and memberPassword !='' ">
+        MEMBER_PASSWORD,
+      </if>
+      <if test="memberType != null and memberType !='' ">
+        MEMBER_TYPE,
+      </if>
+      <if test="memberCardid != null and memberCardid !='' ">
+        MEMBER_CARDID,
+      </if>
+      <if test="memberNickname != null and memberNickname !='' ">
+        MEMBER_NICKNAME,
+      </if>
+      <if test="memberPoints != null and memberPoints !='' ">
+        MEMBER_POINTS,
+      </if>
+      <if test="receiveAddrid != null and receiveAddrid !='' ">
+        RECEIVE_ADDRID,
+      </if>
+      <if test="memberPic != null and memberPic !='' ">
+        MEMBER_PIC,
+      </if>
+      <if test="regDate != null and regDate !='' ">
+        REG_DATE,
+      </if>
+      <if test="updateDate != null and updateDate !='' ">
+        UPDATE_DATE,
+      </if>
+      <if test="lastLogindate != null and lastLogindate !='' ">
+        LAST_LOGINDATE,
+      </if>
+      <if test="lastOutdate != null and lastOutdate !='' ">
+        LAST_OUTDATE,
+      </if>
+      <if test="expand01 != null and expand01 !='' ">
+        EXPAND_01,
+      </if>
+      <if test="expand02 != null and expand02 !='' ">
+        EXPAND_02,
+      </if>
+      <if test="expand03 != null and expand03 !='' ">
+        EXPAND_03,
+      </if>
+      <if test="expand04 != null and expand04 !='' ">
+        EXPAND_04,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberId != null and memberId !='' ">
+        #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="memberName != null and memberName !='' ">
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPhone != null and memberPhone !='' ">
+        #{memberPhone,jdbcType=BIGINT},
+      </if>
+      <if test="memberSexual != null and memberSexual !='' ">
+        #{memberSexual,jdbcType=INTEGER},
+      </if>
+      <if test="memberAddr != null and memberAddr !='' ">
+        #{memberAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="memberIdentity != null and memberIdentity !='' ">
+        #{memberIdentity,jdbcType=BIGINT},
+      </if>
+      <if test="memberCarnumber != null and memberCarnumber !='' ">
+        #{memberCarnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="memberLoginname != null and memberLoginname !='' ">
+        #{memberLoginname,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPassword != null and memberPassword !='' ">
+        #{memberPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="memberType != null and memberType !='' ">
+        #{memberType,jdbcType=INTEGER},
+      </if>
+      <if test="memberCardid != null and memberCardid !='' ">
+        #{memberCardid,jdbcType=VARCHAR},
+      </if>
+      <if test="memberNickname != null and memberNickname !='' ">
+        #{memberNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPoints != null and memberPoints !='' ">
+        #{memberPoints,jdbcType=BIGINT},
+      </if>
+      <if test="receiveAddrid != null and receiveAddrid !='' ">
+        #{receiveAddrid,jdbcType=INTEGER},
+      </if>
+      <if test="memberPic != null and memberPic !='' ">
+        #{memberPic,jdbcType=VARCHAR},
+      </if>
+      <if test="regDate != null and regDate !='' ">
+        #{regDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null and updateDate !='' ">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLogindate != null and lastLogindate !='' ">
+        #{lastLogindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOutdate != null and lastOutdate !='' ">
+        #{lastOutdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expand01 != null and expand01 !='' ">
+        #{expand01,jdbcType=BIT},
+      </if>
+      <if test="expand02 != null and expand02 !='' ">
+        #{expand02,jdbcType=BIT},
+      </if>
+      <if test="expand03 != null and expand03 !='' ">
+        #{expand03,jdbcType=BIT},
+      </if>
+      <if test="expand04 != null and expand04 !='' ">
+        #{expand04,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="Member">
+    update member
+    <set>
+      <if test="memberName != null and memberName !='' ">
+        MEMBER_NAME = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPhone != null and memberPhone !='' ">
+        MEMBER_PHONE = #{memberPhone,jdbcType=BIGINT},
+      </if>
+      <if test="memberSexual != null and memberSexual !='' ">
+        MEMBER_SEXUAL = #{memberSexual,jdbcType=INTEGER},
+      </if>
+      <if test="memberAddr != null and memberAddr !='' ">
+        MEMBER_ADDR = #{memberAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="memberIdentity != null and memberIdentity !='' ">
+        MEMBER_IDENTITY = #{memberIdentity,jdbcType=BIGINT},
+      </if>
+      <if test="memberCarnumber != null and memberCarnumber !='' ">
+        MEMBER_CARNUMBER = #{memberCarnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="memberLoginname != null and memberLoginname !='' ">
+        MEMBER_LOGINNAME = #{memberLoginname,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPassword != null and memberPassword !='' ">
+        MEMBER_PASSWORD = #{memberPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="memberType != null and memberType !='' ">
+        MEMBER_TYPE = #{memberType,jdbcType=INTEGER},
+      </if>
+      <if test="memberCardid != null and memberCardid !='' ">
+        MEMBER_CARDID = #{memberCardid,jdbcType=VARCHAR},
+      </if>
+      <if test="memberNickname != null and memberNickname !='' ">
+        MEMBER_NICKNAME = #{memberNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPoints != null and memberPoints !='' ">
+        MEMBER_POINTS = #{memberPoints,jdbcType=BIGINT},
+      </if>
+      <if test="receiveAddrid != null and receiveAddrid !='' ">
+        RECEIVE_ADDRID = #{receiveAddrid,jdbcType=INTEGER},
+      </if>
+      <if test="memberPic != null and memberPic !='' ">
+        MEMBER_PIC = #{memberPic,jdbcType=VARCHAR},
+      </if>
+      <if test="regDate != null and regDate !='' ">
+        REG_DATE = #{regDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null and updateDate !='' ">
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLogindate != null and lastLogindate !='' ">
+        LAST_LOGINDATE = #{lastLogindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOutdate != null and lastOutdate !='' ">
+        LAST_OUTDATE = #{lastOutdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expand01 != null and expand01 !='' ">
+        EXPAND_01 = #{expand01,jdbcType=BIT},
+      </if>
+      <if test="expand02 != null and expand02 !='' ">
+        EXPAND_02 = #{expand02,jdbcType=BIT},
+      </if>
+      <if test="expand03 != null and expand03 !='' ">
+        EXPAND_03 = #{expand03,jdbcType=BIT},
+      </if>
+      <if test="expand04 != null and expand04 !='' ">
+        EXPAND_04 = #{expand04,jdbcType=BIT},
+      </if>
+    </set>
+    where MEMBER_ID = #{memberId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="Member">
+    update member
+    set MEMBER_NAME = #{memberName,jdbcType=VARCHAR},
+      MEMBER_PHONE = #{memberPhone,jdbcType=BIGINT},
+      MEMBER_SEXUAL = #{memberSexual,jdbcType=INTEGER},
+      MEMBER_ADDR = #{memberAddr,jdbcType=VARCHAR},
+      MEMBER_IDENTITY = #{memberIdentity,jdbcType=BIGINT},
+      MEMBER_CARNUMBER = #{memberCarnumber,jdbcType=VARCHAR},
+      MEMBER_LOGINNAME = #{memberLoginname,jdbcType=VARCHAR},
+      MEMBER_PASSWORD = #{memberPassword,jdbcType=VARCHAR},
+      MEMBER_TYPE = #{memberType,jdbcType=INTEGER},
+      MEMBER_CARDID = #{memberCardid,jdbcType=VARCHAR},
+      MEMBER_NICKNAME = #{memberNickname,jdbcType=VARCHAR},
+      MEMBER_POINTS = #{memberPoints,jdbcType=BIGINT},
+      RECEIVE_ADDRID = #{receiveAddrid,jdbcType=INTEGER},
+      MEMBER_PIC = #{memberPic,jdbcType=VARCHAR},
+      REG_DATE = #{regDate,jdbcType=TIMESTAMP},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      LAST_LOGINDATE = #{lastLogindate,jdbcType=TIMESTAMP},
+      LAST_OUTDATE = #{lastOutdate,jdbcType=TIMESTAMP},
+      EXPAND_01 = #{expand01,jdbcType=BIT},
+      EXPAND_02 = #{expand02,jdbcType=BIT},
+      EXPAND_03 = #{expand03,jdbcType=BIT},
+      EXPAND_04 = #{expand04,jdbcType=BIT}
+    where MEMBER_ID = #{memberId,jdbcType=BIGINT}
+  </update>
+</mapper>
